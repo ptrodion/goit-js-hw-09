@@ -12,7 +12,7 @@ const refs = {
 };
 
 refs.startTimerEl.disabled = true;
-const defaultValue = new Date().getTime();
+const defaultValue = new Date();
 let selectedDate = null;
 let remainingTime = null;
 let timeInterval = null;
@@ -25,16 +25,15 @@ flatpickr(refs.chooseDataEl, {
   defaultDate: defaultValue,
   minuteIncrement: 1,
 
-  onChange: function () {
+  onChange() {
     refs.startTimerEl.disabled = true;
   },
   onClose(selectedDates) {
-    selectedDate = Date.parse(selectedDates[0]);
+    selectedDate = selectedDates[0].getTime();
 
     if (selectedDate < defaultValue) {
       Notiflix.Notify.warning('Please choose a date in the future');
     } else {
-      isTimer = true;
       refs.startTimerEl.disabled = false;
       remainingTime = selectedDate - defaultValue;
     }
@@ -53,10 +52,10 @@ function getTimeRemaining() {
 
   return {
     total: remainingTime,
-    days: days,
-    hours: hours,
-    minutes: minutes,
-    seconds: seconds,
+    days,
+    hours,
+    minutes,
+    seconds,
   };
 }
 
@@ -67,6 +66,7 @@ function updateClock() {
     clearInterval(timeInterval);
     return;
   }
+
   const time = getTimeRemaining();
 
   refs.daysEl.textContent = time.days;
