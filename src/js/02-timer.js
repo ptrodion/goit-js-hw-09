@@ -17,6 +17,8 @@ let selectedDate = null;
 let remainingTime = null;
 let timeInterval = null;
 
+refs.startTimerEl.addEventListener('click', onStartTimer);
+
 flatpickr(refs.chooseDataEl, {
   enableTime: true,
   time_24hr: true,
@@ -32,13 +34,12 @@ flatpickr(refs.chooseDataEl, {
     if (selectedDate < defaultValue) {
       Notiflix.Notify.warning('Please choose a date in the future');
     } else {
+      isTimer = true;
       refs.startTimerEl.disabled = false;
       remainingTime = selectedDate - defaultValue;
     }
   },
 });
-
-refs.startTimerEl.addEventListener('click', onStartTimer);
 
 function onStartTimer() {
   timeInterval = setInterval(updateClock, 1000);
@@ -69,11 +70,7 @@ function updateClock() {
   const time = getTimeRemaining();
 
   refs.daysEl.textContent = time.days;
-  refs.hoursEl.textContent = ('0' + time.hours).slice(-2);
-  refs.minutesEl.textContent = ('0' + time.minutes).slice(-2);
-  refs.secondsEl.textContent = ('0' + time.seconds).slice(-2);
-}
-
-function reloadPage() {
-  location.reload(); // Перезагрузить страницу
+  refs.hoursEl.textContent = String(time.hours).padStart(2, '0');
+  refs.minutesEl.textContent = String(time.minutes).padStart(2, '0');
+  refs.secondsEl.textContent = String(time.seconds).padStart(2, '0');
 }
